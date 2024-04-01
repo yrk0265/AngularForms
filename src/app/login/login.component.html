@@ -1,0 +1,50 @@
+<mat-card class="login-page">
+  <mat-card-title>Login</mat-card-title>
+  <mat-card-content>
+
+    <form class="login-form data-form" #loginForm="ngForm" (ngSubmit)="login(loginForm,$event)">
+      <mat-form-field>
+        <input matInput type="email" #email="ngModel" name="email" 
+               ngModel [ngModelOptions]="{updateOn:'blur'}"
+               required
+               placeholder="Email" email minlength="2" maxlength="15"
+               (ngModelChange)="onEmailChange($event)">
+               <!-- pattern="^([HF[a-z|A-Z|0-9]{0,3}|hf[a-z|A-Z|0-9]{0,3}]{0,5}[@]{1}[a-zA-Z]{0,5}[\.]{1}[a-zA-Z]{0,3})$" -->
+               <!-- //[a-zA-Z0-9] -->
+        <mat-error *ngIf="email.errors?.required">The email is mandatory</mat-error>
+        <mat-error *ngIf="email.errors?.minlength">
+          {{email.errors?.minlength.actualLength}}. Your email must have minimum {{email.errors?.minlength.requiredLength}} chars but it only has 
+        </mat-error>
+        <mat-error *ngIf="email.errors?.email">
+          This is not a valid email.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+
+        <input matInput type="password" minlength="8" passwordStrength  ngModel #password="ngModel" required name="password" placeholder="Password">
+        
+        <mat-error *ngIf="password.errors?.required">
+          The password is mandatory.
+      </mat-error>
+      
+      </mat-form-field>
+      <ng-container *ngIf="password.errors | onlyOneError:['minlength','passwordStrength'] as error">
+        <div class="field-message" *ngIf="error?.minlength">
+           Your email must have minimum {{error?.minlength.requiredLength}} chars but it only has {{error?.minlength.actualLength}}.
+        </div>
+        <div class="field-message" *ngIf="error?.passwordStrength">
+          Your password must have lower case, upper case and numeric characters.
+        </div>
+      </ng-container>
+      <!-- ///(click)="login(loginForm)" -->
+      <button mat-raised-button color="primary" type="submit" [disabled]="!(loginForm?.valid)">
+         Login
+      </button>
+      <div class="form-val">
+        {{ loginForm.valid | json }}
+      </div>
+    </form>
+
+  </mat-card-content>
+</mat-card>
