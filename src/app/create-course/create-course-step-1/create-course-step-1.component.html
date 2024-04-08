@@ -1,4 +1,3 @@
-
 <div [formGroup]="form">
     <mat-form-field>
         <input matInput placeholder="Course Title" formControlName="title" #title>
@@ -14,7 +13,6 @@
             <ng-container *ngFor="let category of (courseCategories$ | async)">
                     <mat-option [value]="category.code">{{category.description}}</mat-option>
             </ng-container>
-            
         </mat-select>
     </mat-form-field>
     <mat-form-field>
@@ -28,7 +26,6 @@
     </mat-checkbox>
     <mat-form-field appearance="outline">
         <textarea matInput placeholder="Description" formControlName="longDescription">
-
         </textarea>
     </mat-form-field>
 </div>

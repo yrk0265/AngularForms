@@ -12,5 +12,42 @@ import {noop, of} from 'rxjs';
 })
 export class FileUploadComponent {
 
+  @Input()
+  requiredFileType:string;
+  fileName = '';
+  fileUploadError = false;
+  uploadProgress:number;
+  constructor(private http:HttpClient){
 
+  }
+
+  onFileSelected($event: any) {
+    const file:File = $event.target.files[0];
+    if(file) {
+      this.fileName = file.name;
+      console.log(this.fileName);
+      const formData = new FormData();
+      formData.append("thumbnail",file);
+      this.fileUploadError = false;
+      this.http.post("/api/thumbnail-upload",formData,{
+        reportProgress:true,
+        observe:'events'
+      })
+      .pipe(catchError(error=>{
+        this.fileUploadError=true;
+        return of(error);
+      }),
+      finalize(()=>
+      {
+        this.uploadProgress = null;
+      })
+      )
+      .subscribe(event=>{
+        if(event.type == HttpEventType.UploadProgress)
+        {
+           this.uploadProgress = Math.round(100 * (event.loaded/event.total));
+        }
+      });
+    }
+  }
 }
